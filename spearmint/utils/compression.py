@@ -185,6 +185,8 @@
 import zlib
 import numpy as np
 
+from spearmint.utils.fixes import items
+
 COMPRESS_TYPE = 'compressed array'
 
 # TODO: see if there is a better way to encode this than base64
@@ -201,7 +203,7 @@ def decompress_array(a):
 def compress_nested_container(u_container):
     if isinstance(u_container, dict):
         cdict = {}
-        for key, value in u_container.iteritems():
+        for key, value in items(u_container):
             if isinstance(value, dict) or isinstance(value, list):
                 cdict[key] = compress_nested_container(value)
             else:
@@ -233,7 +235,7 @@ def decompress_nested_container(c_container):
                 raise Exception('Container does not contain a valid array.')
         else:
             udict = {}
-            for key, value in c_container.iteritems():
+            for key, value in items(c_container):
                 if isinstance(value, dict) or isinstance(value, list):
                     udict[key] = decompress_nested_container(value)
                 else:

@@ -195,6 +195,7 @@ from spearmint.utils.param            import Param as Hyperparameter
 from spearmint.kernels                import Matern, Noise, Scale, SumKernel, TransformKernel
 from spearmint.sampling.slice_sampler import SliceSampler
 from spearmint.utils                  import priors
+from spearmint.utils.fixes            import xrange
 from spearmint.transformations        import BetaWarp, IgnoreDims, Linear, Normalization, Transformer
 
 import spearmint.utils.param      as param_util

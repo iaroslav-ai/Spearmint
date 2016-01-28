@@ -183,6 +183,7 @@
 # its Institution.
 
 
+import sys
 import os
 import tempfile
 import copy
@@ -191,9 +192,13 @@ import numpy.random   as npr
 import scipy.linalg   as spla
 import scipy.stats    as sps
 import scipy.optimize as spo
-import cPickle
 import multiprocessing
 import ast
+
+if sys.version < '3':
+    import cPickle
+else:
+    import pickle as cPickle
 
 def compute_ei(model, pred, ei_target=None, compute_grad=True):
     # TODO: use ei_target

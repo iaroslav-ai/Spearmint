@@ -196,6 +196,8 @@ import scipy.special as spe
 import logging
 #warnings.filterwarnings("ignore", category=RuntimeWarning)
 
+from spearmint.utils.fixes import xrange
+
 class productCov:
     def __init__(self, num_dimensions, **kwargs):
         # The sub-covariances of which this is the elementwise product

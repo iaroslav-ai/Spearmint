@@ -184,8 +184,13 @@
 
 
 import numpy as np
-import scipy.weave
+try:
+    import scipy.weave
+except ImportError:
+    pass
 import scipy.linalg as spla
+
+from spearmint.utils.fixes import xrange
 
 # Update Cholesky decomposition to include a single extra
 # row/column in the input matrix which is significantly faster than

@@ -196,12 +196,14 @@ except ImportError: import json
 from collections import OrderedDict
 
 from spearmint.utils.database.mongodb import MongoDB
+from spearmint.utils.fixes            import items
 from spearmint.tasks.task_group       import TaskGroup
 
 from spearmint.resources.resource import parse_resources_from_config
 from spearmint.resources.resource import print_resources_status
 
 from spearmint.utils.parsing import parse_db_address
+
 
 def get_options():
     parser = optparse.OptionParser(usage="usage: %prog [options] directory")
@@ -262,7 +264,7 @@ def main():
     
     while True:
 
-        for resource_name, resource in resources.iteritems():
+        for resource_name, resource in items(resources):
 
             jobs = load_jobs(db, experiment_name)
             # resource.printStatus(jobs)
@@ -313,7 +315,7 @@ def tired(db, experiment_name, resources):
     return True if no resources are accepting jobs
     """
     jobs = load_jobs(db, experiment_name)
-    for resource_name, resource in resources.iteritems():
+    for resource_name, resource in items(resources):
         if resource.acceptingJobs(jobs):
             return False
     return True

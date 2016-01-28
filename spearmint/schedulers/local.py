@@ -183,7 +183,7 @@
 # its Institution.
 
 import spearmint
-from abstract_scheduler import AbstractScheduler
+from spearmint.schedulers.abstract_scheduler import AbstractScheduler
 import os
 import subprocess
 import sys

@@ -8,6 +8,7 @@ import mpl_toolkits.mplot3d.axes3d as axes3d
 
 
 from spearmint.utils.database.mongodb import MongoDB
+from spearmint.utils.fixes import items
 
 from spearmint.main import get_options, parse_resources_from_config, load_jobs, remove_broken_jobs, \
     load_task_group, load_hypers
@@ -15,7 +16,7 @@ from spearmint.main import get_options, parse_resources_from_config, load_jobs, 
 def print_dict(d, level=1):
     if isinstance(d, dict):
         if level > 1: print ""
-        for k, v in d.iteritems():
+        for k, v in items(d):
             print "  " * level, k,
             print_dict(v, level=level+1)
     else:

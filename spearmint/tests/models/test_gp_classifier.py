@@ -186,6 +186,7 @@ import numpy        as np
 import numpy.random as npr
 
 from spearmint.models import GPClassifier
+from spearmint.utils.fixes import xrange
 
 def test_gp_init():
     gp = GPClassifier(5)

@@ -193,6 +193,7 @@ from collections import defaultdict
 
 from .acquisition_functions  import compute_ei
 from ..utils.grad_check      import check_grad
+from ..utils.fixes           import items, xrange
 from ..grids                 import sobol_grid
 from ..models.abstract_model import function_over_hypers
 from ..                      import models
@@ -260,7 +261,7 @@ class DefaultChooser(object):
                                         grid_seed=self.grid_seed)
 
         # A useful hack: add previously visited points to the grid
-        for task_name, task in task_group.tasks.iteritems():
+        for task_name, task in items(task_group.tasks):
             if task.has_valid_inputs():
                 self.grid = np.append(self.grid, task.valid_normalized_data_dict['inputs'], axis=0)
             if task.has_pending():
@@ -274,7 +275,7 @@ class DefaultChooser(object):
 
         # print 'Fittings tasks: %s' % str(task_group.tasks.keys())
 
-        for task_name, task in task_group.tasks.iteritems():
+        for task_name, task in items(task_group.tasks):
             if task.type.lower() == 'objective':
                 data_dict = self.objective # confusing: this is how self.objective gets populated
             elif task.type.lower() == 'constraint':
@@ -351,7 +352,7 @@ class DefaultChooser(object):
         best_grid_ei  = grid_ei[best_grid_ind]
         
         if VERBOSE:
-            print 'Best EI before optimization: %f' % best_grid_ei
+            print('Best EI before optimization: %f' % best_grid_ei)
 
         if self.check_grad:
             check_grad(lambda x: self.acq_optimize_wrapper(x, current_best, True), 
@@ -387,8 +388,8 @@ class DefaultChooser(object):
         # Optimization should always be better unless the optimization
         # breaks in some way.
         if VERBOSE:
-            print 'Best EI after  optimization: %f' % best_opt_ei
-            print 'Suggested input %s' % cand[best_opt_ind]
+            print('Best EI after  optimization: %f' % best_opt_ei)
+            print('Suggested input %s' % cand[best_opt_ind])
 
         if best_opt_ei >= best_grid_ei:
             suggestion = cand[best_opt_ind]

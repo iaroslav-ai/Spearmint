@@ -182,8 +182,15 @@
 # to enter into this License and Terms of Use on behalf of itself and
 # its Institution.
 
+import sys
 import numpy as np
-import cPickle as pickle
+
+from spearmint.utils.fixes import xrange
+
+if sys.version < '3':
+    import cPickle as pickle
+else:
+    import pickle
 
 # Numba autojit might be nice.  Currently asplodes.
 def sobol(num_points, num_dims):
@@ -236,7 +243,8 @@ def sobol(num_points, num_dims):
     return Z
 
 def to_binary(X, bits):
-    return 1 & (X[:,np.newaxis]/2**np.arange(bits-1,-1,-1, dtype=np.uint32))
+    temp = X[:,np.newaxis]/2**np.arange(bits-1,-1,-1, dtype=np.uint32)
+    return np.ones_like(temp) & temp
 
 # These are the parameters for the Sobol sequence.
 # This is hilarious.

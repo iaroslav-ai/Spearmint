@@ -189,6 +189,7 @@ import numpy.random as npr
 
 from spearmint.transformations import Linear
 from spearmint.utils           import priors
+from spearmint.utils.fixes     import xrange
 from spearmint.utils.param     import Param as Hyperparameter
 
 def test_backward_pass():

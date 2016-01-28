@@ -186,6 +186,8 @@ import numpy        as np
 
 from abc import ABCMeta, abstractmethod
 
+from spearmint.utils.fixes import xrange
+
 class AbstractModel(object):
     __metaclass__ = ABCMeta
 

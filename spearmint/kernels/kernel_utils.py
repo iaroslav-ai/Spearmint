@@ -184,7 +184,13 @@
 
 
 import numpy as np
-import scipy.weave
+
+try:
+    import scipy.weave
+except ImportError:
+    pass
+
+from spearmint.utils.fixes import xrange
 from scipy.spatial.distance import cdist
 
 def dist2(ls, x1, x2=None):

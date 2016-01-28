@@ -184,7 +184,7 @@
 
 
 import numpy as np
-import kernel_utils
+from spearmint.kernels import kernel_utils
 
 from .abstract_kernel import AbstractKernel
 from ..utils          import priors
