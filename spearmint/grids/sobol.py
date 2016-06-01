@@ -243,12 +243,12 @@ def sobol(num_points, num_dims):
     return Z
 
 def to_binary(X, bits):
-    temp = X[:,np.newaxis]/2**np.arange(bits-1,-1,-1, dtype=np.uint32)
+    temp = X[:,np.newaxis]//2**np.arange(bits-1,-1,-1, dtype=np.uint32)  # freaking integer division required here!
     return np.ones_like(temp) & temp
 
 # These are the parameters for the Sobol sequence.
 # This is hilarious.
-params = """(lp1
+params = b"""(lp1
 (dp2
 S'a'
 I0

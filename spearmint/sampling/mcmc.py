@@ -185,6 +185,7 @@
 
 import numpy        as np
 import numpy.random as npr
+import sys
 
 from spearmint.utils.fixes import xrange
 
@@ -342,7 +343,7 @@ def slice_sample(init_x, logprob, *logprob_args, **slice_sample_args):
 
     dims = init_x.shape[0]
     if compwise:
-        ordering = range(dims)
+        ordering = list(range(dims))
         npr.shuffle(ordering)
         new_x = init_x.copy()
         for d in ordering:
@@ -445,7 +446,7 @@ def slice_sample_simple(init_x, logprob, *logprob_args, **slice_sample_args):
 
     dims = init_x.shape[0]
     if compwise:   # if component-wise (independent) sampling
-        ordering = range(dims)
+        ordering = list(range(dims))
         npr.shuffle(ordering)
         cur_x = init_x.copy()
         for d in ordering:

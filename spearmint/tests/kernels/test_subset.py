@@ -215,8 +215,8 @@ def test_grad():
             data2[i,j] += eps
             dloss_est[i,j] = ((loss_1 - loss_2) / (2*eps))
 
-    print 'Subset kernel grad using indices %s:' % inds
-    print dloss
+    print('Subset kernel grad using indices %s:' % inds)
+    print(dloss)
 
     assert np.linalg.norm(dloss - dloss_est) < 1e-6
 

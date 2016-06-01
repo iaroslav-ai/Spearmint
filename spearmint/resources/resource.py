@@ -189,6 +189,7 @@ import importlib
 from operator import add
 import numpy as np
 import sys
+from functools import reduce
 
 from spearmint.utils.fixes import items
 

@@ -190,7 +190,6 @@ import scipy.linalg as spla
 import scipy.stats  as sps
 
 from .abstract_model          import AbstractModel
-from ..utils.fixes            import items
 from ..utils.param            import Param as Hyperparameter
 from ..kernels                import Matern52, Noise, Scale, SumKernel, TransformKernel
 from ..sampling.slice_sampler import SliceSampler

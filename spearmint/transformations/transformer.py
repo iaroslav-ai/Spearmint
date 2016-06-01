@@ -209,7 +209,7 @@ class Transformer(object):
         if len(layer_transformations) == 1 and isinstance(layer_transformations[0], AbstractTransformation):
             assert layer_transformations[0].num_dims == num_input_dims, 'Transformation must have the same number of input dimensions as the transformer layer.'
             transformations = layer_transformations
-            t_inds = [range(num_input_dims)]
+            t_inds = [list(range(num_input_dims))]  # 2to3: not so sure here about the list, gives a double list: [[1,2,3]] ; but same happens in py2
         else:
             transformations, t_inds = zip(*layer_transformations)
 
@@ -243,7 +243,7 @@ class Transformer(object):
             for i in inds:
                 counts[i] += 1
 
-        assert np.array(counts.keys()).max() < self.num_dims, 'Maximum index exceeds number of dimensions.'
+        assert np.array(list(counts.keys())).max() < self.num_dims, 'Maximum index exceeds number of dimensions.'
         assert all([count == 1 for count in counts.values()]), 'Each index may only be used once.'
 
     def forward_pass(self, inputs):
@@ -270,11 +270,11 @@ class Transformer(object):
     def backward_pass(self, V):
         assert self.layer_transformations, 'Transformer should contain transformations.'
 
-        for transformations, t_inds, remaining_inds, output_num_dims in zip(
+        for transformations, t_inds, remaining_inds, output_num_dims in reversed(list(zip(  # bit ugly here, but simplist reversed(zip(... doenst work for some reason
                 self.layer_transformations,
                 self.layer_inds,
                 self.layer_remaining_inds,
-                self.layer_output_dims)[::-1]:
+                self.layer_output_dims))):
 
             JV = np.zeros(list(V.shape[:-1])+[len([i for inds in t_inds for i in inds]) + len(remaining_inds)])
             i = 0

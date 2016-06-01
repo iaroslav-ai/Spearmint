@@ -186,7 +186,7 @@ import numpy as np
 
 from abc import ABCMeta, abstractmethod
 
-class AbstractKernel(object):
+class AbstractKernel(object):  # metaclass is an additional parameter in py3: AbstractKernel(object, metaclass=...)
     __metaclass__ = ABCMeta
 
     @property

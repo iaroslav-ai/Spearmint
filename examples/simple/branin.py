@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 import math
 
@@ -8,12 +9,12 @@ def branin(x, y):
     
     result = float(result)
     
-    print 'Result = %f' % result
+    print('Result = %f' % result)
     #time.sleep(np.random.randint(60))
     return result
 
 # Write a function like this called 'main'
 def main(job_id, params):
-    print 'Anything printed here will end up in the output directory for job #%d' % job_id
-    print params
+    print('Anything printed here will end up in the output directory for job #%d' % job_id)
+    print(params)
     return branin(params['x'], params['y'])

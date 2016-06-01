@@ -406,5 +406,5 @@ def test_add_layer():
 
     output_inds = t.add_layer(st3)
     assert len(t.layer_transformations) == 2
-    assert output_inds == range(10)
+    assert output_inds == list(range(10))
 

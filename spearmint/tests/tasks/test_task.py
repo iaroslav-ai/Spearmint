@@ -186,7 +186,7 @@ import numpy as np
 
 from collections          import OrderedDict
 from spearmint.tasks.task import Task
-from spearmint.utils.fixes import items
+from spearmint.utils.fixes import items, xrange
 
 def create_task():
     task_name = "mytask"

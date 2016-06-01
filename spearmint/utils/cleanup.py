@@ -187,7 +187,7 @@ import os
 import sys
 import pymongo
 import json
-from parsing import parse_db_address
+from .parsing import parse_db_address
 
 
 def cleanup(path):

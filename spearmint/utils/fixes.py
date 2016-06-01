@@ -5,7 +5,7 @@ def items(x):
         return x.iteritems()
     return x.items()
 
-def xrange(x):
+def xrange(*args):
     if sys.version < '3':
-        return xrange(x)
-    return range(x)
+        return __builtins__['xrange'](*args)  # seems a bit fishy, in my console __builtins__.xrange() works
+    return range(*args)

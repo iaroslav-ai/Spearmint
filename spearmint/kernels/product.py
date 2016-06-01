@@ -188,8 +188,8 @@
 # of multiple different covariance functions.
 import sys
 import numpy as np
-import priors
-import kernel_utils
+import spearmint.utils.priors
+from . import kernel_utils
 import scipy.stats as sps
 import warnings
 import scipy.special as spe

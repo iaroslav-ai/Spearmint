@@ -265,7 +265,7 @@ def launch(db_address, experiment_name, job_id):
                 result = {'main' : result}
         
         if set(result.keys()) != set(job['tasks']):
-            raise Exception("Result task names %s did not match job task names %s." % (result.keys(), job['tasks']))
+            raise Exception("Result task names %s did not match job task names %s." % (list(result.keys()), job['tasks']))
 
         success = True
     except:
@@ -401,7 +401,7 @@ def mcr_launcher(job):
     # Change into the directory.
     os.chdir(job['expt_dir'])
 
-    if os.environ.has_key('MATLAB'):
+    if 'MATLAB' in os.environ:
         mcr_loc = os.environ['MATLAB']
     else:
         raise Exception("Please set the MATLAB environment variable")

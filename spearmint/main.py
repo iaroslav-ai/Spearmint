@@ -303,7 +303,7 @@ def main():
 
                 # Print out the status of the resources
                 # resource.printStatus(jobs)
-                print_resources_status(resources.values(), jobs)
+                print_resources_status(list(resources.values()), jobs)
 
         # If no resources are accepting jobs, sleep
         # (they might be accepting if suggest takes a while and so some jobs already finished by the time this point is reached)
@@ -433,7 +433,7 @@ def save_job(job, db, experiment_name):
 
 def load_task_group(db, options, task_names=None):
     if task_names is None:
-        task_names = options['tasks'].keys()
+        task_names = list(options['tasks'].keys())
     task_options = { task: options["tasks"][task] for task in task_names }
 
     jobs = load_jobs(db, options['experiment-name'])

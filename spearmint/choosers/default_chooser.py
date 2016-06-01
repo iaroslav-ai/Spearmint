@@ -197,6 +197,7 @@ from ..utils.fixes           import items, xrange
 from ..grids                 import sobol_grid
 from ..models.abstract_model import function_over_hypers
 from ..                      import models
+from functools import reduce
 
 DEFAULT_GRIDSIZE  = 20000
 DEFAULT_GRIDSEED  = 0
@@ -300,7 +301,7 @@ class DefaultChooser(object):
 
                 self.models[task_name] = getattr(models, model_class)(task_group.num_dims, **task.options)
 
-                vals = data_dict['values'] if data_dict.has_key('values') else data_dict['counts']
+                vals = data_dict['values'] if 'values' in data_dict else data_dict['counts']
 
                 sys.stderr.write('Fitting %s for %s task...\n' % (model_class, task_name))
                 new_hypers[task_name] = self.models[task_name].fit(
@@ -521,7 +522,7 @@ class DefaultChooser(object):
                 np.ones(pred.shape[0], dtype=bool))
 
     def acquisition_function_over_hypers(self, *args, **kwargs):
-        return function_over_hypers(self.models.values(), self.acquisition_function, *args, **kwargs)
+        return function_over_hypers(self.models.values(), self.acquisition_function, *args, **kwargs)  #TODO might need to use list(.values())
 
     def acquisition_function(self, cand, current_best, compute_grad=True):
         obj_model = self.models[self.objective['name']]
