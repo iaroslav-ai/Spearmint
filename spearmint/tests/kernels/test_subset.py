@@ -186,6 +186,7 @@ import numpy        as np
 import numpy.random as npr
 
 from spearmint.kernels import Matern52, Subset
+from spearmint.utils.fixes import xrange
 
 def test_grad():
     npr.seed(1)
@@ -214,8 +215,8 @@ def test_grad():
             data2[i,j] += eps
             dloss_est[i,j] = ((loss_1 - loss_2) / (2*eps))
 
-    print 'Subset kernel grad using indices %s:' % inds
-    print dloss
+    print('Subset kernel grad using indices %s:' % inds)
+    print(dloss)
 
     assert np.linalg.norm(dloss - dloss_est) < 1e-6
 

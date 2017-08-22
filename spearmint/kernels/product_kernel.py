@@ -186,7 +186,7 @@
 import numpy as np
 
 from .abstract_kernel import AbstractKernel
-
+from functools import reduce
 
 class ProductKernel(AbstractKernel):
     # TODO: If all kernel values are positive then we can do things in log-space

@@ -184,7 +184,7 @@
 
 import numpy        as np
 import numpy.random as npr
-
+from spearmint.utils.fixes import xrange
 from spearmint.models import GP
 
 def test_gp_init():

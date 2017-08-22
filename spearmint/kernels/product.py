@@ -188,13 +188,15 @@
 # of multiple different covariance functions.
 import sys
 import numpy as np
-import priors
-import kernel_utils
+import spearmint.utils.priors
+from . import kernel_utils
 import scipy.stats as sps
 import warnings
 import scipy.special as spe
 import logging
 #warnings.filterwarnings("ignore", category=RuntimeWarning)
+
+from spearmint.utils.fixes import xrange
 
 class productCov:
     def __init__(self, num_dimensions, **kwargs):

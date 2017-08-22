@@ -185,11 +185,12 @@
 
 import copy
 import numpy as np
+import sys
 
 from collections import OrderedDict
 
 from .task import Task
-
+from spearmint.utils.fixes import items
 
 class TaskGroup(object):
     """
@@ -203,7 +204,7 @@ class TaskGroup(object):
     
     def __init__(self, tasks_config, variables_config):
         self.tasks = {}
-        for task_name, task_options in tasks_config.iteritems():
+        for task_name, task_options in items(tasks_config):
             self.tasks[task_name] = Task(task_name,
                                          task_options,
                                          variables_config)
@@ -245,7 +246,7 @@ class TaskGroup(object):
     @property
     def values(self):
         """return a dictionary of the task values keyed by task name"""
-        return {task_name : task.values for task_name, task in self.tasks.iteritems()}
+        return {task_name : task.values for task_name, task in items(self.tasks)}
 
     @values.setter
     def values(self, values):

@@ -187,6 +187,7 @@ import numpy.random as npr
 
 from spearmint.kernels         import Matern52, TransformKernel
 from spearmint.transformations import BetaWarp, Normalization, Linear, Transformer
+from spearmint.utils.fixes import xrange
 
 def test_grad():
     npr.seed(1)

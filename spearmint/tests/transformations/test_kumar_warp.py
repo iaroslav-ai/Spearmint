@@ -191,6 +191,7 @@ from nose.tools import assert_raises
 
 from spearmint.transformations import KumarWarp
 from spearmint.utils           import priors
+from spearmint.utils.fixes     import xrange
 from spearmint.utils.param     import Param as Hyperparameter
 
 def test_validation():

@@ -181,7 +181,7 @@
 # 13. End User represents and warrants that it has the legal authority
 # to enter into this License and Terms of Use on behalf of itself and
 # its Institution.
-
+from __future__ import print_function
 import sys
 import os
 import ast
@@ -195,6 +195,7 @@ from spearmint.utils.param            import Param as Hyperparameter
 from spearmint.kernels                import Matern, Noise, Scale, SumKernel, TransformKernel
 from spearmint.sampling.slice_sampler import SliceSampler
 from spearmint.utils                  import priors
+from spearmint.utils.fixes            import xrange
 from spearmint.transformations        import BetaWarp, IgnoreDims, Linear, Normalization, Transformer
 
 import spearmint.utils.param      as param_util
@@ -221,7 +222,7 @@ class DiagnosticGP(GP):
     # https://hips.seas.harvard.edu/blog/2013/06/10/testing-mcmc-code-part-2-integration-tests/
     # This test uses an arbitrary statistic of the data (outputs). Here we use the sum.
     def geweke_correctness_test(self):
-        print 'Initiating Geweke Correctness test'
+        print('Initiating Geweke Correctness test')
         # Note: the horseshoe prior on the noise will make the line slightly not straight
         # because we don't have the actual log pdf
 
@@ -230,7 +231,7 @@ class DiagnosticGP(GP):
         # First, check that all priors and models can be sampled from
         for param in self.hypers:
             if not hasattr(param.prior, 'sample'):
-                print 'Prior of param %s cannot be sampled from. Cannot perform the Geweke correctness test.' % param.name
+                print('Prior of param %s cannot be sampled from. Cannot perform the Geweke correctness test.' % param.name)
                 return
 
         n = 10000 # number of samples # n = self.mcmc_iters
@@ -244,7 +245,7 @@ class DiagnosticGP(GP):
         caseA = np.zeros(n)
         for i in xrange(n):
             if i % 1000 == 0:
-                print 'Geweke Part A Sample %d/%d' % (i,n)
+                print('Geweke Part A Sample %d/%d' % (i,n))
             for param in self.hypers:
                 param.sample_from_prior()
             latent_y = self.sample_from_prior_given_hypers(self.data) # only inputs used
@@ -263,7 +264,7 @@ class DiagnosticGP(GP):
         caseB = np.zeros(n)
         for i in xrange(n):
             if i % 1000 == 0:
-                print 'Geweke Part B Sample %d/%d' % (i,n)
+                print('Geweke Part B Sample %d/%d' % (i, n))
             # Take MCMC step on theta given data
             self.sampler.generate_sample() # data['inputs'] and data['values'] used
 
@@ -277,10 +278,10 @@ class DiagnosticGP(GP):
 
             caseB[i] = statistic_of_interest(self.data['values'])
         
-        print np.mean(caseA)
-        print np.std(caseA)
-        print np.mean(caseB)
-        print np.std(caseB)
+        print(np.mean(caseA))
+        print(np.std(caseA))
+        print(np.mean(caseB))
+        print(np.std(caseB))
 
         # Then, sort the sets A and B.
         caseA = np.sort(caseA)

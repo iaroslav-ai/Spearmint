@@ -196,12 +196,14 @@ except ImportError: import json
 from collections import OrderedDict
 
 from spearmint.utils.database.mongodb import MongoDB
+from spearmint.utils.fixes            import items
 from spearmint.tasks.task_group       import TaskGroup
 
 from spearmint.resources.resource import parse_resources_from_config
 from spearmint.resources.resource import print_resources_status
 
 from spearmint.utils.parsing import parse_db_address
+
 
 def get_options():
     parser = optparse.OptionParser(usage="usage: %prog [options] directory")
@@ -262,7 +264,7 @@ def main():
     
     while True:
 
-        for resource_name, resource in resources.iteritems():
+        for resource_name, resource in items(resources):
 
             jobs = load_jobs(db, experiment_name)
             # resource.printStatus(jobs)
@@ -301,7 +303,7 @@ def main():
 
                 # Print out the status of the resources
                 # resource.printStatus(jobs)
-                print_resources_status(resources.values(), jobs)
+                print_resources_status(list(resources.values()), jobs)
 
         # If no resources are accepting jobs, sleep
         # (they might be accepting if suggest takes a while and so some jobs already finished by the time this point is reached)
@@ -313,7 +315,7 @@ def tired(db, experiment_name, resources):
     return True if no resources are accepting jobs
     """
     jobs = load_jobs(db, experiment_name)
-    for resource_name, resource in resources.iteritems():
+    for resource_name, resource in items(resources):
         if resource.acceptingJobs(jobs):
             return False
     return True
@@ -431,7 +433,7 @@ def save_job(job, db, experiment_name):
 
 def load_task_group(db, options, task_names=None):
     if task_names is None:
-        task_names = options['tasks'].keys()
+        task_names = list(options['tasks'].keys())
     task_options = { task: options["tasks"][task] for task in task_names }
 
     jobs = load_jobs(db, options['experiment-name'])

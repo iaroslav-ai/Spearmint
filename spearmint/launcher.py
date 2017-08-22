@@ -190,6 +190,7 @@ import subprocess
 import numpy as np
 
 from spearmint.utils.database.mongodb import MongoDB
+from spearmint.utils.fixes import items
 
 def main():
     parser = optparse.OptionParser(usage="usage: %prog [options]")
@@ -264,14 +265,14 @@ def launch(db_address, experiment_name, job_id):
                 result = {'main' : result}
         
         if set(result.keys()) != set(job['tasks']):
-            raise Exception("Result task names %s did not match job task names %s." % (result.keys(), job['tasks']))
+            raise Exception("Result task names %s did not match job task names %s." % (list(result.keys()), job['tasks']))
 
         success = True
     except:
         import traceback
         traceback.print_exc()
         sys.stderr.write("Problem executing the function\n")
-        print sys.exc_info()
+        print(sys.exc_info())
         
     end_time = time.time()
 
@@ -305,7 +306,7 @@ def python_launcher(job):
 
     # Convert the JSON object into useful parameters.
     params = {}
-    for name, param in job['params'].iteritems():
+    for name, param in items(job['params']):
         vals = param['values']
 
         if param['type'].lower() == 'float':
@@ -351,7 +352,7 @@ def matlab_launcher(job):
     session.run("cd('%s')" % os.path.realpath(job['expt_dir']))
 
     session.run('params = struct()')
-    for name, param in job['params'].iteritems():
+    for name, param in items(job['params']):
         vals = param['values']
 
         # sys.stderr.write('%s = %s\n' % (param['name'], str(vals)))
@@ -400,7 +401,7 @@ def mcr_launcher(job):
     # Change into the directory.
     os.chdir(job['expt_dir'])
 
-    if os.environ.has_key('MATLAB'):
+    if 'MATLAB' in os.environ:
         mcr_loc = os.environ['MATLAB']
     else:
         raise Exception("Please set the MATLAB environment variable")

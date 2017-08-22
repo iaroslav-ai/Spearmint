@@ -186,6 +186,7 @@ import numpy as np
 
 from collections          import OrderedDict
 from spearmint.tasks.task import Task
+from spearmint.utils.fixes import items, xrange
 
 def create_task():
     task_name = "mytask"
@@ -211,7 +212,7 @@ def create_task():
     # Create a set of inputs that satisfies the constraints of each variable
     X = np.zeros((10,num_dims))
     for i in xrange(10):
-        for name, variable in variables_meta.iteritems():
+        for name, variable in items(variables_meta):
             indices = variable['indices']
             if variable['type'] == 'int':
                 X[i,indices] = np.random.randint(variable['min'], variable['max']+1, len(indices))

@@ -186,6 +186,7 @@ import numpy        as np
 import numpy.random as npr
 
 from spearmint.kernels import Matern52
+from spearmint.utils.fixes import xrange
 
 def test_matern_grad():
     npr.seed(1)

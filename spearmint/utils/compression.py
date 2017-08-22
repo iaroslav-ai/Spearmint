@@ -184,24 +184,54 @@
 
 import zlib
 import numpy as np
+import codecs
+from spearmint.utils.fixes import items
+import sys
 
 COMPRESS_TYPE = 'compressed array'
 
 # TODO: see if there is a better way to encode this than base64
 # It takes about 0.65 seconds to compress a 1000x1000 array on a 2011 Macbook air
 def compress_array(a):
-    return {'ctype'  : COMPRESS_TYPE,
-            'shape'  : list(a.shape),
-            'value'  : (zlib.compress(a).encode('base64'))}
+
+    if sys.version < '3':
+        return {'ctype': COMPRESS_TYPE,
+                'shape': list(a.shape),
+                'value': (zlib.compress(a).encode('base64'))} # compress returns bytes, encode turns it into a string
+    else:
+        # TODO not so sure if this string encoding/decoding is of any use; in py3 it stays a bytes object
+        return {'ctype'  : COMPRESS_TYPE,
+                'shape'  : list(a.shape),
+                'value': (codecs.encode(zlib.compress(a), encoding='base64'))  # compress returns bytes, encode turns it into a string (actually from b'\x00' to b'eJwBIA')
+                }
 
 # It takes about 0.15 seconds to decompress a 1000x1000 array on a 2011 Macbook air
 def decompress_array(a):
-    return np.fromstring(zlib.decompress(a['value'].decode('base64'))).reshape(a['shape'])
+    """
+    what this does in py27:
+    a['value'] is a string
+    .decode()         -> turns it into bytes (but still a STRING object, justthis weird \x03..)
+    zlib.decompress() -> decompressed bytes (still a STRING)
+    fromstring()      -> turns the string back into an array
+    Parameters
+    ----------
+    a
+
+    Returns
+    -------
+
+    """
+    if sys.version < '3':
+        return np.fromstring(zlib.decompress(a['value'].decode('base64'))).reshape(a['shape'])
+    else:
+        decoded = codecs.decode(a['value'], encoding='base64')  # str -> bytes
+        decomp = zlib.decompress(decoded)   # bytes -> bytes
+        return np.fromstring(decomp).reshape(a['shape'])  # bytes -> np.array
 
 def compress_nested_container(u_container):
     if isinstance(u_container, dict):
         cdict = {}
-        for key, value in u_container.iteritems():
+        for key, value in items(u_container):
             if isinstance(value, dict) or isinstance(value, list):
                 cdict[key] = compress_nested_container(value)
             else:
@@ -226,14 +256,14 @@ def compress_nested_container(u_container):
 
 def decompress_nested_container(c_container):
     if isinstance(c_container, dict):
-        if c_container.has_key('ctype') and c_container['ctype'] == COMPRESS_TYPE:
+        if 'ctype' in c_container and c_container['ctype'] == COMPRESS_TYPE:
             try:
                 return decompress_array(c_container)
             except:
-                raise Exception('Container does not contain a valid array.')
+                raise Exception('Container does not contain a valid array.')  # TODO, dangerous, very generic exception catch here
         else:
             udict = {}
-            for key, value in c_container.iteritems():
+            for key, value in items(c_container):
                 if isinstance(value, dict) or isinstance(value, list):
                     udict[key] = decompress_nested_container(value)
                 else:

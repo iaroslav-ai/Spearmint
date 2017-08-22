@@ -191,11 +191,11 @@ import scipy.linalg      as spla
 import scipy.optimize    as spo
 import scipy.io          as sio
 import scipy.stats       as sps
-import scipy.weave
 
 
 from .gp                                     import GP
 from ..utils.param                           import Param as Hyperparameter
+from ..utils.fixes                           import items, xrange
 from ..kernels                               import Matern52, Noise, Scale, SumKernel, TransformKernel
 from ..sampling.slice_sampler                import SliceSampler
 from ..sampling.whitened_prior_slice_sampler import WhitenedPriorSliceSampler
@@ -208,7 +208,7 @@ try:
     log    = logging.getLogger(module)
 except:
     log = logging.getLogger()
-    print 'Not running from main.'
+    print('Not running from main.')
 
 class GPClassifier(GP):
     def __init__(self, num_dims, **options):
@@ -476,7 +476,7 @@ class GPClassifier(GP):
         gp_dict = {}
 
         gp_dict['hypers'] = {}
-        for name, hyper in self.params.iteritems():
+        for name, hyper in items(self.params):
             gp_dict['hypers'][name] = hyper.value
 
         # Save the latent values as a dict with keys as hashes of the data

@@ -193,9 +193,11 @@ from collections import defaultdict
 
 from .acquisition_functions  import compute_ei
 from ..utils.grad_check      import check_grad
+from ..utils.fixes           import items, xrange
 from ..grids                 import sobol_grid
 from ..models.abstract_model import function_over_hypers
 from ..                      import models
+from functools import reduce
 
 DEFAULT_GRIDSIZE  = 20000
 DEFAULT_GRIDSEED  = 0
@@ -260,7 +262,7 @@ class DefaultChooser(object):
                                         grid_seed=self.grid_seed)
 
         # A useful hack: add previously visited points to the grid
-        for task_name, task in task_group.tasks.iteritems():
+        for task_name, task in items(task_group.tasks):
             if task.has_valid_inputs():
                 self.grid = np.append(self.grid, task.valid_normalized_data_dict['inputs'], axis=0)
             if task.has_pending():
@@ -274,7 +276,7 @@ class DefaultChooser(object):
 
         # print 'Fittings tasks: %s' % str(task_group.tasks.keys())
 
-        for task_name, task in task_group.tasks.iteritems():
+        for task_name, task in items(task_group.tasks):
             if task.type.lower() == 'objective':
                 data_dict = self.objective # confusing: this is how self.objective gets populated
             elif task.type.lower() == 'constraint':
@@ -299,7 +301,7 @@ class DefaultChooser(object):
 
                 self.models[task_name] = getattr(models, model_class)(task_group.num_dims, **task.options)
 
-                vals = data_dict['values'] if data_dict.has_key('values') else data_dict['counts']
+                vals = data_dict['values'] if 'values' in data_dict else data_dict['counts']
 
                 sys.stderr.write('Fitting %s for %s task...\n' % (model_class, task_name))
                 new_hypers[task_name] = self.models[task_name].fit(
@@ -351,7 +353,7 @@ class DefaultChooser(object):
         best_grid_ei  = grid_ei[best_grid_ind]
         
         if VERBOSE:
-            print 'Best EI before optimization: %f' % best_grid_ei
+            print('Best EI before optimization: %f' % best_grid_ei)
 
         if self.check_grad:
             check_grad(lambda x: self.acq_optimize_wrapper(x, current_best, True), 
@@ -387,8 +389,8 @@ class DefaultChooser(object):
         # Optimization should always be better unless the optimization
         # breaks in some way.
         if VERBOSE:
-            print 'Best EI after  optimization: %f' % best_opt_ei
-            print 'Suggested input %s' % cand[best_opt_ind]
+            print('Best EI after  optimization: %f' % best_opt_ei)
+            print('Suggested input %s' % cand[best_opt_ind])
 
         if best_opt_ei >= best_grid_ei:
             suggestion = cand[best_opt_ind]
@@ -520,7 +522,7 @@ class DefaultChooser(object):
                 np.ones(pred.shape[0], dtype=bool))
 
     def acquisition_function_over_hypers(self, *args, **kwargs):
-        return function_over_hypers(self.models.values(), self.acquisition_function, *args, **kwargs)
+        return function_over_hypers(self.models.values(), self.acquisition_function, *args, **kwargs)  #TODO might need to use list(.values())
 
     def acquisition_function(self, cand, current_best, compute_grad=True):
         obj_model = self.models[self.objective['name']]
